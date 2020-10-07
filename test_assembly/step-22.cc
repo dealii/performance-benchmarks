@@ -36,13 +36,16 @@
 #include <deal.II/lac/block_sparse_matrix.h>
 #include <deal.II/lac/solver_cg.h>
 #include <deal.II/lac/precondition.h>
+#if DEAL_II_VERSION_GTE(9,0,0)
+#include <deal.II/lac/affine_constraints.h>
+#else
 #include <deal.II/lac/constraint_matrix.h>
+#endif
 
 #include <deal.II/grid/tria.h>
 #include <deal.II/grid/grid_generator.h>
 #include <deal.II/grid/tria_accessor.h>
 #include <deal.II/grid/tria_iterator.h>
-#include <deal.II/grid/tria_boundary_lib.h>
 #include <deal.II/grid/grid_tools.h>
 #include <deal.II/grid/grid_refinement.h>
 
@@ -180,7 +183,11 @@ namespace Step22
     // memory leak, and can never produce a
     // dangling pointer to an already
     // destroyed object:
+#if DEAL_II_VERSION_GTE(9,0,0)
+    std::shared_ptr<typename InnerPreconditioner<dim>::type> A_preconditioner;
+#else
     std_cxx11::shared_ptr<typename InnerPreconditioner<dim>::type> A_preconditioner;
+#endif
 
     TimerOutput timer;
   };
@@ -950,7 +957,14 @@ namespace Step22
     std::cout << "   Computing preconditioner..." << std::endl << std::flush;
 
     A_preconditioner
-      = std_cxx11::shared_ptr<typename InnerPreconditioner<dim>::type>(new typename InnerPreconditioner<dim>::type());
+      =
+#if DEAL_II_VERSION_GTE(9,0,0)
+    std::shared_ptr<typename InnerPreconditioner<dim>::type>
+#else
+      std_cxx11::shared_ptr<typename InnerPreconditioner<dim>::type>
+#endif
+      (new typename InnerPreconditioner<dim>::type());
+    
     A_preconditioner->initialize (system_matrix.block(0,0),
                                   typename InnerPreconditioner<dim>::type::AdditionalData());
       }

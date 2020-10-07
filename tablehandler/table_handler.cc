@@ -38,8 +38,7 @@ int main ()
 {
   TimerOutput timer (std::cout, TimerOutput::summary, TimerOutput::wall_times);
   deallog.depth_console(0);
-  deallog.threshold_double(1.e-10);
-
+  
   TableHandler table;
 
   std::string keys[] = { "key1", "key2", "key3", "key4", "key5", "key6", "key7", "key8", "key9", "key10", "key11", "key12", "key13", "key14", "key15"};
