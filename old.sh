@@ -7,18 +7,35 @@
 
 cd dealii;git reset --hard -q && git clean -fd -q;cd ..
 
-cd dealii;git checkout v8.4.1;cd ..
+cd dealii;git checkout v9.2.0;cd ..
 rm -rf build
 ./test.sh
 
-cd dealii;git checkout v8.3.0;cd ..
+cd dealii;git checkout v9.1.1;cd ..
 rm -rf build
 ./test.sh
 
-cd dealii;git checkout v8.2.1;cd ..
-patch -p1 <patches/821andbefore.patch
+cd dealii;git checkout v9.0.1;cd ..
 rm -rf build
 ./test.sh
+
+cd dealii;git checkout v8.5.0;cd ..
+rm -rf build
+./test.sh
+
+
+#cd dealii;git checkout v8.4.1;cd ..
+#rm -rf build
+#./test.sh
+
+#cd dealii;git checkout v8.3.0;cd ..
+#rm -rf build
+#./test.sh
+
+#cd dealii;git checkout v8.2.1;cd ..
+#patch -p1 <patches/821andbefore.patch
+#rm -rf build
+#./test.sh
 
 # not tested:
 #cd dealii;git checkout v8.1.0;cd ..
