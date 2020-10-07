@@ -29,7 +29,11 @@ fi
 
 cd $BUILDDIR
 echo hi from `pwd` >>$logfile
-cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/install  $basepath/dealii >>$logfile 2>&1 && nice ninja install >>$logfile 2>&1 || exit -1
+cmake -G "Ninja" \
+      -D DEAL_II_COMPONENT_EXAMPLES=OFF \
+      -D CMAKE_BUILD_TYPE=Release \
+      -D CMAKE_INSTALL_PREFIX=`pwd`/install \
+      $basepath/dealii >>$logfile 2>&1 && nice ninja install >>$logfile 2>&1 || exit -1
 
 cd $basepath
 
