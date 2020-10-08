@@ -19,6 +19,7 @@ echo "cmd=<${cmd}> output=<${output}>"
 if [ "${cmd}" = "reinit" ]; then
     echo "creating new db:"
     python3 render.py newdb
+    python3 runner.py newdb
     echo "running old:"
     ./old.sh
     echo "rendering"
