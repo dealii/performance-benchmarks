@@ -36,9 +36,9 @@ def github_set_commit_status(user, repo, token, sha1, state="success", descripti
         res = urllib2.urlopen(req)
         result = res.read()
     except urllib2.HTTPError as e:
-        print "setting github status failed: HTTP error ", e.code
+        print("setting github status failed: HTTP error ", e.code)
     except urllib2.URLError as e:
-        print "setting github status failed: failure ", e.reason
+        print("setting github status failed: failure ", e.reason)
 
 def date_to_epoch(dt):
     epoch = datetime.utcfromtimestamp(0)
@@ -100,11 +100,11 @@ class history:
         return [ k[0] for k in sorted(keys, key=lambda x: x[1], reverse=True) ]
 
     def dump(self):
-        print "dumping {0} entries".format(len(self.data))
+        print("dumping {0} entries".format(len(self.data)))
 
         sorted_keys = self.sort_keys()
 
-        print "SHA1 time good name:"
+        print("SHA1 time good name:")
         for sha in sorted_keys:
             x = self.data[sha]
             timestr = "?"
@@ -113,7 +113,7 @@ class history:
                 timestr = dt.strftime(self.timeformat)
             except:
                 pass
-            print "{} {} {} {}".format(x['sha1'], timestr, x['good'], x['name'])
+            print("{} {} {} {}".format(x['sha1'], timestr, x['good'], x['name']))
     
     def render(self):
         f = open ("results.html", "w")
@@ -168,15 +168,15 @@ class history:
                 count = count + 1
 
         if count==0:
-            print "ERROR: sha1 not found."
+            print("ERROR: sha1 not found.")
         elif count==1:
             for k in self.data.keys():
                 if k.startswith(sha):
                     self.data.pop(k)
-                    print "1 test result deleted"
+                    print("1 test result deleted")
                     return
         else:
-            print "ERROR: sha1 is not unique."
+            print("ERROR: sha1 is not unique.")
             
 
     def add(self, sha, good, name, text):
@@ -199,7 +199,7 @@ def is_successful(lines):
 def test(repodir, h, name=""):
     sha1 = subprocess.check_output("cd {0};git rev-parse HEAD".format(repodir),
                                    shell=True).replace("\n","")
-    print "running", sha1
+    print("running", sha1)
 
     if len(name)>0:
         name = "-"+name.replace("/","_").replace(":","_")
@@ -208,14 +208,14 @@ def test(repodir, h, name=""):
         answer = subprocess.check_output("./test.sh {} \"{}\"".format(sha1, name),
                                      shell=True,stderr=subprocess.STDOUT)
     except:
-        print "failed"
+        print("failed")
         return
 
-    print answer
+    print(answer)
 
     good = is_successful(answer.split("\n"))
 
-    print good
+    print(good)
     h.add(sha1, good, name, answer)
     h.save()
     return good
@@ -224,21 +224,21 @@ def test(repodir, h, name=""):
 whattodo = ""
 
 if len(sys.argv)<2:
-    print "gitautotester"
-    print "-------------"
-    print ""
-    print "usage:"
-    print "runner.py do-current\n\t\t tests the current revision in this directory"
-    print "runner.py run-all\n\t\t runs all revisions on master not tested"
-    print "runner.py do-pullrequests\n\t\t test all open PRs that are okay to be tested"
-    print ""
-    print "runner.py newdb\n\t\t creates a new database overwriting the existing one"
-    print "runner.py dump\n\t\t lists entry in the current database"
-    print "runner.py testdata\n\t\t puts some test data into the database"
-    print "runner.py pullrequests\n\t\t lists the open pull requests"
-    print "runner.py test <user>/<repo>:<ref>\n\t\t tests the branch ref from user/repo on github"
-    print "runner.py delete <sha1>\n\t\t deletes the sha1 from the database (fuzzy matching)"
-    print "runner.py render\n\t\t generate results.html"
+    print("gitautotester")
+    print("-------------")
+    print("")
+    print("usage:")
+    print("runner.py do-current\n\t\t tests the current revision in this directory")
+    print("runner.py run-all\n\t\t runs all revisions on master not tested")
+    print("runner.py do-pullrequests\n\t\t test all open PRs that are okay to be tested")
+    print("")
+    print("runner.py newdb\n\t\t creates a new database overwriting the existing one")
+    print("runner.py dump\n\t\t lists entry in the current database")
+    print("runner.py testdata\n\t\t puts some test data into the database")
+    print("runner.py pullrequests\n\t\t lists the open pull requests")
+    print("runner.py test <user>/<repo>:<ref>\n\t\t tests the branch ref from user/repo on github")
+    print("runner.py delete <sha1>\n\t\t deletes the sha1 from the database (fuzzy matching)")
+    print("runner.py render\n\t\t generate results.html")
 else:
     whattodo = sys.argv[1]
     arg1 = ""
@@ -271,7 +271,7 @@ if whattodo == "run-all":
     try:
         ret = subprocess.check_output("cd {0} && git pull origin -q".format(repodir), shell=True)
     except subprocess.CalledProcessError:
-        print "pull failed, ignoring"
+        print("pull failed, ignoring")
 
     answer = subprocess.check_output("cd {0} && git log --format=oneline --first-parent -n {1}".format(repodir, n_old_tests),
                                      shell=True,stderr=subprocess.STDOUT)
@@ -281,7 +281,7 @@ if whattodo == "run-all":
         if len(sha1)!=40:
             continue
         if not h.have(sha1):
-            print "testing {}".format(sha1)
+            print("testing {}".format(sha1))
             
             ret = subprocess.check_call("cd {0} && git checkout {1} -q".format(repodir, sha1),
                                         shell=True)
@@ -290,9 +290,9 @@ if whattodo == "run-all":
             test(repodir, h, "")
         
         else:
-            print "skipping {}".format(sha1)
+            print("skipping {}".format(sha1))
             result = h.data[sha1]
-            print "  ", result['good'], result['name']#, result['text']
+            print("  ", result['good'], result['name'])#, result['text'])
 
 
     ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True)
@@ -300,29 +300,29 @@ if whattodo == "run-all":
 
     
 if whattodo == "do-current":
-    print repodir
+    print(repodir)
     test(repodir, h, "manual")
 
 
 if whattodo == "pullrequests":
     r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
     data = js.loads(r)
-    print "found {0} pull requests...".format(len(data))
+    print("found {0} pull requests...".format(len(data)))
     for pr in data:
         by = pr['user']['login']
         title = pr['title']
         sha = pr['head']['sha']
-        print "PR{}: {} '{}' by {}".format(pr['number'], sha, title, by)
-        print "  use: python runner.py test {0}:{1}".format(pr['head']['repo']['full_name'],pr['head']['ref'])
+        print("PR{}: {} '{}' by {}".format(pr['number'], sha, title, by))
+        print("  use: python runner.py test {0}:{1}".format(pr['head']['repo']['full_name'],pr['head']['ref']))
         #print simplejson.dumps(pr, sort_keys=True, indent=4, separators=(',', ': '))
         if h.have(sha):
-            print "  already tested"
+            print("  already tested")
             result = h.data[sha]
-            print "  ", result['good'], result['name'], result['text']
+            print("  ", result['good'], result['name'], result['text'])
         else:
             allowed = False
             if is_allowed(by):
- #               print "  allowed owner"
+ #               print("  allowed owner"
                 allowed = True
             else:
                 r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
@@ -331,33 +331,33 @@ if whattodo == "pullrequests":
                     user = comment['user']['login']
                     text = comment['body']
                     if is_allowed(user) and has_hotword(text):
-                        #print "  allowed by hotword from ", user
+                        #print("  allowed by hotword from ", user
                         allowed = True
             
             if allowed:
                 pass
-#                print "TODO: testing"
+#                print("TODO: testing"
                 
 
 if whattodo == "do-pullrequests":
     r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
     data = js.loads(r)
-    print "found {0} pull requests...".format(len(data))
+    print("found {0} pull requests...".format(len(data)))
     for pr in data:
         by = pr['user']['login']
         title = pr['title']
         sha = pr['head']['sha']
-        print "PR{}: {} '{}' by {}".format(pr['number'], sha, title, by)
-        #print "  use: python runner.py test {0}:{1}".format(pr['head']['repo']['full_name'],pr['head']['ref'])
+        print("PR{}: {} '{}' by {}".format(pr['number'], sha, title, by))
+        #print("  use: python runner.py test {0}:{1}".format(pr['head']['repo']['full_name'],pr['head']['ref'])
         #print simplejson.dumps(pr, sort_keys=True, indent=4, separators=(',', ': '))
         if h.have(sha):
             result = h.data[sha]
-            print "  already tested: good={} - '{}':".format(result['good'], result['name'])
-            print result['text']
+            print("  already tested: good={} - '{}':".format(result['good'], result['name']))
+            print(result['text'])
         else:
             allowed = False
             if is_allowed(by):
- #               print "  allowed owner"
+ #               print("  allowed owner"
                 allowed = True
             else:
                 r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
@@ -366,11 +366,11 @@ if whattodo == "do-pullrequests":
                     user = comment['user']['login']
                     text = comment['body']
                     if is_allowed(user) and has_hotword(text):
-                        print "  allowed by hotword from {}".format(user)
+                        print("  allowed by hotword from {}".format(user))
                         allowed = True
             
             if allowed:
-                print "testing..."
+                print("testing...")
                 github_set_commit_status(github_user, github_repo, token, sha, "pending", "tester is running")
 
                 ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True)
@@ -392,7 +392,7 @@ if whattodo == "do-pullrequests":
                                         shell=True)
 
             else:
-                print "not allowed! please add a comment containing '/run-tests'"
+                print("not allowed! please add a comment containing '/run-tests'")
                                 
 
 if whattodo == "test":
@@ -402,7 +402,7 @@ if whattodo == "test":
         user = r.group(1)
         repo = r.group(2)
         ref = r.group(3)
-        print user, repo, ref
+        print(user, repo, ref)
         
         ret = subprocess.check_call("cd {0} && git fetch https://github.com/{1}/{2} {3} -q".format(repodir, user, repo, ref), shell=True)
         ret = subprocess.check_call("cd {0} && git checkout FETCH_HEAD -q".format(repodir), shell=True)

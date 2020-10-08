@@ -48,7 +48,7 @@ for test in $TESTS ; do
   echo $time >>tmp
   make run 2>>$logfile | grep "^>" >>tmp
   cd ..
-  cat $test/tmp | python render.py record >> $basepath/logs/$sha/summary
+  cat $test/tmp | python3 render.py record >> $basepath/logs/$sha/summary
   cp $test/tmp $basepath/logs/$sha/$test
 done
 
