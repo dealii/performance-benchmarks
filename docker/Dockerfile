@@ -1,16 +1,12 @@
-FROM tjhei/dealii-base
+FROM tjhei/test-jenkins-slave
 
 MAINTAINER timo.heister@gmail.com
 
 USER root
 
 RUN apt-get update && apt-get -qy install \
-    python valgrind python-dateutil
+    python3 valgrind python3-dateutil python3-urllib3
 
-USER bob
+USER dealii
 WORKDIR $HOME
-
-ADD script.sh $HOME/script.sh
-RUN chmod a+rwx $HOME/script.sh
-CMD /home/bob/script.sh
 
