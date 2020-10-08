@@ -47,11 +47,11 @@ class DB:
         f.close()
 
     def dump(self):
-        print "dumping {0} entries".format(len(self.data))
+        print("dumping {0} entries".format(len(self.data)))
 
         for sha in self.data:
             x = self.data[sha]
-            print x['sha1'], x['desc'], x['time'], x['record'] 
+            print(x['sha1'], x['desc'], x['time'], x['record'])
             #print "{} {} {} {}".format(x['sha1'], 0, x['good'], x['name'])
 
     def get(self, sha):
@@ -73,7 +73,7 @@ class DB:
             try:
                 keys.append((x['sha1'], parser.parse(x['time'])))
             except ValueError:
-                print "could not parse date for {}".format(x['sha1'])
+                print("could not parse date for {}".format(x['sha1']))
         
         keys = [ k[0] for k in sorted(keys, key=lambda x: x[1], reverse=True) ]
         
@@ -87,7 +87,7 @@ class DB:
                     series[name]=[]
                 series[name].append( [ timedate, seconds ] )
             
-        print """
+        print("""
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
         <head>
@@ -103,16 +103,16 @@ class DB:
                 
                 <!-- 2. Add the JavaScript to initialize the chart on document ready -->
                 <script type="text/javascript">
-        """
-        print "shas={};"
+        """)
+        print("shas={};")
         for time in timeshatable:
-            print "shas[Date.parse(\"{}\").toString()]=\"{}\";".format(time, timeshatable[time])
+            print("shas[Date.parse(\"{}\").toString()]=\"{}\";".format(time, timeshatable[time]))
 
-        print "ref={};"
+        print("ref={};")
         for s in ref:
-            print "ref[\"{}\"]={};".format(s, ref[s])
+            print("ref[\"{}\"]={};".format(s, ref[s]))
 
-        print """
+        print("""
                 $(document).ready(function() {                      
                             $('#container').highcharts({
                                 chart: {
@@ -123,12 +123,12 @@ type: 'line',
                                 },
 
 series: [
-"""
+""")
         sortedkeys = sorted(series.keys())
         for s in sortedkeys:
-            print "{"
-            print "name: '{}',".format(s)
-            print "data: ["
+            print("{")
+            print("name: '{}',".format(s))
+            print("data: [")
 
             sorted_series = sorted(series[s], key=lambda x: parser.parse(x[0]))
 
@@ -136,10 +136,10 @@ series: [
                 ref_value = ref[s] if s in ref else 1.0
                 v = d[1]/ref_value*100# - 100
                 v = d[1]
-                print "[Date.parse(\"{}\"), {}],".format(d[0], v)
-            print "] },"
+                print("[Date.parse(\"{}\"), {}],".format(d[0], v))
+            print("] },")
 
-        print """
+        print("""
 ],
             title: {
                 text: 'regression timings',
@@ -217,18 +217,13 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
         <body>
 <a href="https://www.dealii.org">deal.II</a> performance benchmarks, see 
 <a href="https://www.dealii.org/developer/developers/testsuite.html">testsuite documentation</a> for more info.<br>
-                <p>Last update: """
-        print str(datetime.datetime.now())
-        print """</p>
-
+                <p>Last update: """)
+        print(str(datetime.datetime.now()))
+        print("""</p>
                 <div id="container" style="width: 1200px; height: 600px; margin: 0 auto"></div>
-                
-                                
         </body>
 </html>
-"""
-
-        
+""")
 
 db = DB()
 db.load()
@@ -236,10 +231,10 @@ db.load()
 whattodo = ""
 
 if len(sys.argv)<2:
-    print "usage:"
-    print "  record <sha>"
-    print "  render"
-    print "  dump"
+    print("usage:")
+    print("  record <sha>")
+    print("  render")
+    print("  dump")
 else:
     whattodo=sys.argv[1]
 
@@ -267,7 +262,7 @@ if whattodo=="record":
                 record[name]=min(time, record[name])
 
     db.save()
-    print "recorded", sha
+    print("recorded", sha)
 
 if whattodo=="dump":
     db.dump()
