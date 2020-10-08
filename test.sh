@@ -37,20 +37,26 @@ cmake -G "Ninja" \
 
 cd $basepath
 
+fail=0
 for test in $TESTS ; do
   cd $test
   echo "** working on $test" >>$logfile
   rm -fr CMakeCache.txt CMakeFiles Makefile
-  cmake -D DEAL_II_DIR=$BUILDDIR/install . >>$logfile 2>&1
+  cmake -D DEAL_II_DIR=$BUILDDIR/install . >>$logfile 2>&1 || fail=1
   echo $sha >tmp
   echo $test >>tmp
   echo $desc >>tmp
   echo $time >>tmp
-  make run 2>>$logfile | grep "^>" >>tmp
+  make run 2>>$logfile | grep "^>" >>tmp || fail=1
   cd ..
   cat $test/tmp | python3 render.py record >> $basepath/logs/$sha/summary
   cp $test/tmp $basepath/logs/$sha/$test
 done
 
+
 cat $basepath/logs/$sha/summary
 
+if [ "${fail}" = "1" ]; then
+    echo "ERROR. Whole log:"
+    cat $logfile
+fi
