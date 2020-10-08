@@ -198,7 +198,7 @@ def is_successful(lines):
 
 def test(repodir, h, name=""):
     sha1 = subprocess.check_output("cd {0};git rev-parse HEAD".format(repodir),
-                                   shell=True).replace("\n","")
+                                   shell=True, universal_newlines=True).replace("\n","")
     print("running", sha1)
 
     if len(name)>0:
@@ -206,7 +206,7 @@ def test(repodir, h, name=""):
 
     try:
         answer = subprocess.check_output("./test.sh {} \"{}\"".format(sha1, name),
-                                     shell=True,stderr=subprocess.STDOUT)
+                                         shell=True, universal_newlines=True, stderr=subprocess.STDOUT)
     except:
         print("failed")
         return
@@ -274,7 +274,7 @@ if whattodo == "run-all":
         print("pull failed, ignoring")
 
     answer = subprocess.check_output("cd {0} && git log --format=oneline --first-parent -n {1}".format(repodir, n_old_tests),
-                                     shell=True,stderr=subprocess.STDOUT)
+                                     shell=True, universal_newlines=True, stderr=subprocess.STDOUT)
     lines = answer.split("\n")
     for l in lines[::-1]:
         sha1 = l.split(" ")[0]
@@ -284,9 +284,9 @@ if whattodo == "run-all":
             print("testing {}".format(sha1))
             
             ret = subprocess.check_call("cd {0} && git checkout {1} -q".format(repodir, sha1),
-                                        shell=True)
+                                        shell=True, universal_newlines=True)
 
-            ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True)
+            ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True, universal_newlines=True)
             test(repodir, h, "")
         
         else:
@@ -295,8 +295,8 @@ if whattodo == "run-all":
             print("  ", result['good'], result['name'])#, result['text'])
 
 
-    ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True)
-    ret = subprocess.check_call("cd {0} && git checkout master -q".format(repodir), shell=True)
+    ret = subprocess.check_call("cd {0} && git reset --hard -q && git clean -fd -q".format(repodir), shell=True, universal_newlines=True)
+    ret = subprocess.check_call("cd {0} && git checkout master -q".format(repodir), shell=True, universal_newlines=True)
 
     
 if whattodo == "do-current":
