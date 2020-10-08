@@ -11,7 +11,7 @@ import sys
 import subprocess
 import json as js
 from datetime import datetime
-import urllib2
+import urllib3
 
 from config import *
 
@@ -29,15 +29,15 @@ def github_set_commit_status(user, repo, token, sha1, state="success", descripti
     data = js.dumps({'state' : state, 'context' : 'default', 'description' : description, 'target_url' : link})
     url = "https://api.github.com/repos/{0}/{1}/statuses/{2}".format(github_user, github_repo, sha1)
 
-    req = urllib2.Request(url)
+    req = urllib3.Request(url)
     req.add_header("Authorization", "token {0}".format(token))
     req.add_data(data)
     try:
-        res = urllib2.urlopen(req)
+        res = urllib3.urlopen(req)
         result = res.read()
-    except urllib2.HTTPError as e:
+    except urllib3.HTTPError as e:
         print("setting github status failed: HTTP error ", e.code)
-    except urllib2.URLError as e:
+    except urllib3.URLError as e:
         print("setting github status failed: failure ", e.reason)
 
 def date_to_epoch(dt):
@@ -305,7 +305,7 @@ if whattodo == "do-current":
 
 
 if whattodo == "pullrequests":
-    r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
+    r = urllib3.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
     data = js.loads(r)
     print("found {0} pull requests...".format(len(data)))
     for pr in data:
@@ -325,7 +325,7 @@ if whattodo == "pullrequests":
  #               print("  allowed owner"
                 allowed = True
             else:
-                r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
+                r = urllib3.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
                 comments = js.loads(r)
                 for comment in comments:
                     user = comment['user']['login']
@@ -340,7 +340,7 @@ if whattodo == "pullrequests":
                 
 
 if whattodo == "do-pullrequests":
-    r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
+    r = urllib3.urlopen("https://api.github.com/repos/{0}/{1}/pulls".format(github_user, github_repo)).read()
     data = js.loads(r)
     print("found {0} pull requests...".format(len(data)))
     for pr in data:
@@ -360,7 +360,7 @@ if whattodo == "do-pullrequests":
  #               print("  allowed owner"
                 allowed = True
             else:
-                r = urllib2.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
+                r = urllib3.urlopen("https://api.github.com/repos/{0}/{1}/issues/{2}/comments".format(github_user, github_repo, pr['number'])).read()
                 comments = js.loads(r)
                 for comment in comments:
                     user = comment['user']['login']
