@@ -14,7 +14,7 @@ mkdir -p $basepath/logs/$sha
 rm -f $basepath/logs/$sha/*
 
 cd $basepath
-BUILDDIR=`cd ..;mkdir -p build;cd build;pwd`
+BUILDDIR=`mkdir -p build;cd build;pwd`
 logfile=$basepath/logs/$sha/build
 
 
