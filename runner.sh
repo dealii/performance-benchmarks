@@ -30,7 +30,7 @@ elif [ "${cmd}" = "update" ]; then
     python3 render.py render >$output
 elif [ "${cmd}" = "single" ]; then
     cp render.db render.db.backup
-    cd dealii;git fetch origin $sha;cd ..
+    cd dealii;git fetch origin $sha:temp;git checkout temp;cd ..
     ./test.sh
     python3 render.py render >$output
     cp render.db.backup render.db # overwrite to not keep results
