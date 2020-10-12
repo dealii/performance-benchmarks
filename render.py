@@ -6,6 +6,9 @@ import fileinput
 import json as js
 from dateutil import parser
 import datetime
+import matplotlib.pyplot as plt
+import base64
+import numpy as np
 
 def load_ref():
     ref = {}
@@ -93,8 +96,15 @@ class DB:
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                 <title>deal.II automated benchmarks</title>
-                
-                
+
+<style>
+.mytable, .mytable td, .mytable th {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family:"Lucida Console", Monaco, monospace;
+}
+.mytable td + td {text-align:right; }
+</style>
                 <!-- 1. Add these JavaScript inclusions in the head of your page -->
                 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
                 <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
@@ -219,11 +229,78 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
 <a href="https://www.dealii.org/developer/developers/testsuite.html">testsuite documentation</a> for more info.<br>
                 <p>Last update: """)
         print(str(datetime.datetime.now()))
-        print("""</p>
-                <div id="container" style="width: 1200px; height: 600px; margin: 0 auto"></div>
-        </body>
-</html>
-""")
+        print("</p>")
+
+
+        # table
+        cols=5
+        revs=[]
+        for i in range(0,cols):
+            revs.append(keys[i])
+        revs.append("e42ced414f930a6708997032ee0e2b19e668cba2") # 9.2
+        revs.append("777cf92a41deba5c03ec8b561e7fb76d8c5f7249") # 9.1.1
+        revs = revs[::-1]
+        
+        print("""<table class=mytable>
+        <tr>
+        <th></th>""")
+        for sha in revs:
+            x = self.data[sha]
+            print("<th>{}</th>".format(x['desc']))
+        print("</tr>")
+
+        for key in sortedkeys:
+            print("<tr>")
+            print("<td>{}</td>".format(key))
+            for sha in revs:
+                x = self.data[sha]
+                value = "?" if not key in x['record'] else x['record'][key]
+                print("<td>{}</td>".format(value))
+            print("</tr>")
+        
+        print("</table>")
+
+        # plots
+        print("<br><br>")
+        
+        #data_uri = base64.b64encode(open('test.png', 'rb').read()).decode('utf-8')
+        #img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+        #print(img_tag)
+
+
+        lastprog = sortedkeys[0].split(":")[0]
+        
+        for s in sortedkeys:
+            name = s
+            prog = s.split(":")[0]
+            if prog!=lastprog:
+                plt.title(lastprog)
+                plt.savefig("cache.png")
+                data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
+                img_tag = '<br><img src="data:image/png;base64,{0}"/><br>'.format(data_uri)
+                print(img_tag)
+                 
+            lastprog=prog
+            
+            print("name: '{}',".format(s))
+
+            sorted_series = np.array(sorted(series[s], key=lambda x: parser.parse(x[0])))
+            x = [ parser.parse(v) for v in sorted_series[:,0]]
+            plt.plot(x,sorted_series[:,1],'*-',label=s)
+
+
+        #plt.yscale('log')
+        plt.title(lastprog)
+        plt.savefig("cache.png")
+        data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
+        img_tag = '<br><img src="data:image/png;base64,{0}"/><br>'.format(data_uri)
+        print(img_tag)
+        
+        # dynamic plot:
+        print("<br><br>")
+        print("""<div id="container" style="width: 1200px; height: 600px; margin: 0 auto"></div>""")
+        
+        print("</body></html>")
 
 db = DB()
 db.load()
