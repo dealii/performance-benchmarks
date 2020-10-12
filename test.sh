@@ -19,7 +19,7 @@ logfile=$basepath/logs/$sha/build
 
 
 # only test sha1 that start with "a":
-if [[ -n "$name" ]] || [[ $sha == a* ]];
+if [[ -n "$name" ]] || [[ "a$sha" == a* ]];
 then
   echo "Testing $sha - $desc" | tee $logfile 
 else
