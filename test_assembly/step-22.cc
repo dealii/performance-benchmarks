@@ -36,7 +36,7 @@
 #include <deal.II/lac/block_sparse_matrix.h>
 #include <deal.II/lac/solver_cg.h>
 #include <deal.II/lac/precondition.h>
-#if DEAL_II_VERSION_GTE(9,0,0)
+#if DEAL_II_VERSION_GTE(9,1,0)
 #include <deal.II/lac/affine_constraints.h>
 #else
 #include <deal.II/lac/constraint_matrix.h>
@@ -152,8 +152,12 @@ namespace Step22
     FESystem<dim>        fe;
     DoFHandler<dim>      dof_handler;
 
+#if DEAL_II_VERSION_GTE(9,1,0)
+    AffineConstraints<double> constraints;
+#else
     ConstraintMatrix     constraints;
-
+#endif
+      
     BlockSparsityPattern      sparsity_pattern;
     BlockSparseMatrix<double> system_matrix;
 
