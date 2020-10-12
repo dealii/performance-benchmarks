@@ -6,7 +6,12 @@ import fileinput
 import json as js
 from dateutil import parser
 import datetime
+
+# offline rendering:
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
+
 import base64
 import numpy as np
 
