@@ -28,6 +28,12 @@ if [ "${cmd}" = "reinit" ]; then
 elif [ "${cmd}" = "update" ]; then
     python3 runner.py run-all
     python3 render.py render >$output
+elif [ "${cmd}" = "single" ]; then
+    cp render.db render.db.backup
+    cd dealii;git fetch origin $sha;cd ..
+    ./test.sh
+    python3 render.py render >$output
+    cp render.db.backup render.db # overwrite to not keep results
 else
     echo "error: invalid command ${cmd} " | tee $output
     exit 1
