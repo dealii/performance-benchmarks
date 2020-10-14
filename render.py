@@ -237,7 +237,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
         print("</p>")
 
 
-        # table
+        # overview table
         cols=5
         revs=[]
         for i in range(0,cols):
@@ -251,7 +251,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
         <th></th>""")
         for sha in revs:
             x = self.data[sha]
-            print("<th>{}</th>".format(x['desc']))
+            print("<th><a href='https://github.com/dealii/dealii/commit/{}'>{}</a></th>".format(x['desc'], x['desc']))
         print("</tr>")
 
         for key in sortedkeys:
@@ -265,6 +265,24 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
         
         print("</table>")
 
+        # array of shas and descriptions sorted by time:
+        sha_arr = keys[::-1]
+        descriptions_arr = [self.data[sha]['desc'] for sha in sha_arr]
+        sha_to_index = {}
+        for idx in range(len(sha_arr)):
+            sha_to_index[sha_arr[idx]]=idx
+        
+        # map name -> np values
+        series_y = {}
+        for idx in range(len(sha_arr)):
+            sha = sha_arr[idx]
+            x = self.data[sha]
+            for name in x['record']:
+                if not name in series_y:
+                    series_y[name]=len(sha_arr)*[np.nan]
+                seconds = x['record'][name]
+                series_y[name][idx] = seconds
+
         # plots
         print("<br><br>")
         
@@ -274,32 +292,32 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
 
 
         lastprog = sortedkeys[0].split(":")[0]
+
+        def finish_plot(title):
+            plt.title(lastprog)
+            plt.xticks(np.arange(len(sha_arr)), descriptions_arr, rotation=45, fontsize=7)
+            plt.savefig("cache.png")
+            plt.cla()
+            data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
+            img_tag = '<br><img src="data:image/png;base64,{0}"/><br>'.format(data_uri)
+            print(img_tag)
         
         for s in sortedkeys:
             name = s
             prog = s.split(":")[0]
             if prog!=lastprog:
-                plt.title(lastprog)
-                plt.savefig("cache.png")
-                data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
-                img_tag = '<br><img src="data:image/png;base64,{0}"/><br>'.format(data_uri)
-                print(img_tag)
+                finish_plot(lastprog)
                  
             lastprog=prog
             
-            print("name: '{}',".format(s))
+            #print("name: '{}',".format(s))
+            plt.plot(series_y[s],'*-',label=s)
+            
 
-            sorted_series = np.array(sorted(series[s], key=lambda x: parser.parse(x[0])))
-            x = [ parser.parse(v) for v in sorted_series[:,0]]
-            plt.plot(x,sorted_series[:,1],'*-',label=s)
+        finish_plot(lastprog)
 
-
-        #plt.yscale('log')
-        plt.title(lastprog)
-        plt.savefig("cache.png")
-        data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
-        img_tag = '<br><img src="data:image/png;base64,{0}"/><br>'.format(data_uri)
-        print(img_tag)
+        # all data:
+        
         
         # dynamic plot:
         print("<br><br>")
