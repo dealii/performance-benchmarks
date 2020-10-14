@@ -109,6 +109,8 @@ class DB:
   font-family:"Lucida Console", Monaco, monospace;
 }
 .mytable td + td {text-align:right; }
+.date {font-size: 65%;}
+.
 </style>
                 <!-- 1. Add these JavaScript inclusions in the head of your page -->
                 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -251,7 +253,8 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
         <th></th>""")
         for sha in revs:
             x = self.data[sha]
-            print("<th><a href='https://github.com/dealii/dealii/commit/{}'>{}</a></th>".format(x['desc'], x['desc']))
+            time = parser.parse(x['time']).strftime('%Y-%m-%d %H:%M')
+            print("<th><a href='https://github.com/dealii/dealii/commit/{}'>{}</a><br><p class=date>{}</p></th>".format(x['desc'], x['desc'], time))
         print("</tr>")
 
         for key in sortedkeys:
