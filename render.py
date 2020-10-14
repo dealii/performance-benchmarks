@@ -260,7 +260,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
             for sha in revs:
                 x = self.data[sha]
                 value = "?" if not key in x['record'] else x['record'][key]
-                print("<td>{}</td>".format(value))
+                print("<td>{:.3f}</td>".format(value))
             print("</tr>")
         
         print("</table>")
@@ -292,10 +292,11 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
 
 
         lastprog = sortedkeys[0].split(":")[0]
+        xx = np.arange(len(sha_arr))
 
         def finish_plot(title):
             plt.title(lastprog)
-            plt.xticks(np.arange(len(sha_arr)), descriptions_arr, rotation=45, fontsize=7)
+            plt.xticks(xx, descriptions_arr, rotation='vertical', fontsize=7)
             plt.savefig("cache.png")
             plt.cla()
             data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
@@ -311,7 +312,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
             lastprog=prog
             
             #print("name: '{}',".format(s))
-            plt.plot(series_y[s],'*-',label=s)
+            plt.plot(xx, series_y[s],'*-',label=s)
             
 
         finish_plot(lastprog)
