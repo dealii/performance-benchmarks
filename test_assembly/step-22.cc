@@ -13,8 +13,7 @@
 //
 // ---------------------------------------------------------------------
 
-/*
- * step-22.cc
+// simplified version of step-22.cc that includes callgrind sections
  */
 
 
