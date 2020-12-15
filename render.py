@@ -296,10 +296,13 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
 
         lastprog = sortedkeys[0].split(":")[0]
         xx = np.arange(len(sha_arr))
+        xx_filter = np.arange(0,len(sha_arr),10)
+        desc_filter = np.array(descriptions_arr)[xx_filter]
 
         def finish_plot(title):
             plt.title(lastprog)
-            plt.xticks(xx, descriptions_arr, rotation='vertical', fontsize=7)
+            #plt.xticks(xx, descriptions_arr, rotation='vertical', fontsize=7)
+            plt.xticks(xx_filter, desc_filter, rotation='vertical', fontsize=7)
             plt.savefig("cache.png")
             plt.cla()
             data_uri = base64.b64encode(open('cache.png', 'rb').read()).decode('utf-8')
