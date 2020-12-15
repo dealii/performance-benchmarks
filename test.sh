@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TESTS="step-22 tablehandler test_assembly test_poisson test_hp"
-TESTS="test_assembly tablehandler"
+TESTS="test_assembly tablehandler cell_id"
 sha=`cd dealii;git rev-parse HEAD`
 name=`cd dealii;git describe --exact-match HEAD 2>/dev/null`
 desc="`cd dealii;git rev-parse --short HEAD;` $name"
