@@ -264,8 +264,8 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
             print("<td>{}</td>".format(key))
             for sha in revs:
                 x = self.data[sha]
-                value = "?" if not key in x['record'] else x['record'][key]
-                print("<td>{:.3f}</td>".format(value))
+                value = "<td>?</td>" if not key in x['record'] else "<td>{:.3f}</td>".format(x['record'][key])
+                print(value)
             print("</tr>")
         
         print("</table>")
