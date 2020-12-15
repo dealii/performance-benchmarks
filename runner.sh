@@ -34,6 +34,11 @@ elif [ "${cmd}" = "single" ]; then
     ./test.sh
     python3 render.py render >$output
     cp render.db.backup render.db # overwrite to not keep results
+elif [ "${cmd}" = "old" ]; then
+    ./old.sh
+    echo "rendering"
+    python3 render.py render >$output
+
 else
     echo "error: invalid command ${cmd} " | tee $output
     exit 1
