@@ -320,7 +320,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
             lastprog=prog
             
             #print("name: '{}',".format(s))
-            plt.plot(xx, series_y[s],'*-')
+            plt.plot(xx, series_y[s],'+-')
             
 
         finish_plot(lastprog)
