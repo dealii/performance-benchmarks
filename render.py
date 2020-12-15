@@ -107,6 +107,7 @@ class DB:
   border: 1px solid black;
   border-collapse: collapse;
   font-family:"Lucida Console", Monaco, monospace;
+  font-size: 85%;
 }
 .mytable td + td {text-align:right; }
 .date {font-size: 65%;}
