@@ -246,6 +246,7 @@ chart.xAxis[0].setExtremes(Date.parse("2015-07-28T13:45:48-05:00"),chart.xAxis[0
             revs.append(keys[i])
         revs.append("e42ced414f930a6708997032ee0e2b19e668cba2") # 9.2
         revs.append("777cf92a41deba5c03ec8b561e7fb76d8c5f7249") # 9.1.1
+        revs.append("007eaa50a093f091e43d2d54aa65dd5b08db7ca8") # 8.5.0
         revs = revs[::-1]
         
         print("""<table class=mytable>
