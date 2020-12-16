@@ -34,7 +34,7 @@ cmake -G "Ninja" \
       -D DEAL_II_WITH_TASKFLOW=OFF \
       -D CMAKE_BUILD_TYPE=Release \
       -D CMAKE_INSTALL_PREFIX=`pwd`/install \
-      $basepath/dealii >>$logfile 2>&1 && nice ninja install >>$logfile 2>&1 || exit -1
+      $basepath/dealii >>$logfile 2>&1 && nice ninja install >>$logfile 2>&1 || { cat $logfile; exit -1; }
 
 cd $basepath
 
@@ -61,3 +61,5 @@ if [ "${fail}" = "1" ]; then
     echo "ERROR. Whole log:"
     cat $logfile
 fi
+
+exit $fail
