@@ -14,7 +14,7 @@
 // ---------------------------------------------------------------------
 
 // simplified version of step-22.cc that includes callgrind sections
- */
+
 
 
 // @sect3{Include files}
